@@ -1,0 +1,16 @@
+.button{
+  height: 40px;
+  border-radius: 8px;
+  border: 0;
+  background-color: var(--green-900);
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--red-900);
+  transition: all 0.3s;
+
+
+  &:hover {
+    transform: translateY(-2px);
+    color: var(--red-700);
+  }
+}

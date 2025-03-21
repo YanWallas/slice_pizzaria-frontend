@@ -1,0 +1,54 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: 0;
+}
+
+:root{
+
+  --white: #FFF;
+  --black: #000;
+
+  --dark-900: #101026;
+  --dark-700: #1d1d2e;
+
+  --brown-700: #a9740e;
+  --brown-900: #6b3b00;
+  --brown-000: #78685a;
+
+  --gray-100: #8a8a8a;
+  --green-900: #3fffa3;
+  --red-900: #9c3434;
+  --red-700: #ff2038;
+}
+
+button{
+  cursor: pointer;
+}
+
+a{
+  color: inherit;
+  text-rendering: none;
+}
+
+body{
+  background: #1a1a1a;
+
+}
+
+body, input, textarea, select, button{
+  font: 400, 1rem sans-serif;// 1 rem = 16px
+}
+
+@media (max-width: 720px){
+  html{
+    font-size: 87.5%;
+  }
+}
+
+@media (max-width: 1080px){
+  html{
+    font-size: 93.75%;
+  }
+}
