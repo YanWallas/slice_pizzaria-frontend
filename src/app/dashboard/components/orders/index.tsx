@@ -49,7 +49,6 @@ export default function Orders({ orders }: Props){
 
   return(
     <>
-      
         <section className={styles.container}>
           <h1 className={styles.h1}>Novo Pedido</h1>
 
@@ -70,7 +69,7 @@ export default function Orders({ orders }: Props){
       <main className={styles.container}>
 
         <section className={styles.containerHeader}>
-          <h1>Últimos pedidos</h1>
+          <h1>Pedidos em aberto</h1>
           <button onClick={handleRefresh}>
             <RefreshCw size={24} color='#3fffa3'/>
           </button>
