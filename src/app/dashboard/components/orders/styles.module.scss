@@ -68,3 +68,36 @@
 .emptyItem{
   color: var(--gray-100);
 }
+
+.form{
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  margin: 16px 0;
+}
+
+.h1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputOpen{
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0 16px;
+  color: var(--white);
+  transition: all 0.3s;
+
+  &:focus {
+    border-color: var(--red-700);
+    box-shadow: 0 0 10px rgba(255, 63, 75, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}

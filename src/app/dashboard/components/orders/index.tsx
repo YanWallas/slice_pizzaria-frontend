@@ -7,6 +7,7 @@ import { use } from 'react'
 import { OrderContext } from '@/providers/order';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Button } from '@/app/dashboard/components/button/';
 
 interface Props{
   orders: OrderProps[]
@@ -25,9 +26,47 @@ export default function Orders({ orders }: Props){
     toast.success("Pedidos atualizados com sucesso!")
   }
 
+  function handleOpenOrder(formData: FormData){
+    const numMesaRaw = formData.get("numMesa");
+
+    // Verifica se o valor existe
+    if (!numMesaRaw) {
+      console.error("Número da mesa não informado.");
+      return;
+    }
+    // Converte para número
+    const numMesa = Number(numMesaRaw);
+  
+    // Verifica se é um número válido e positivo
+    if (isNaN(numMesa) || numMesa < 1) {
+      console.error("Número da mesa inválido. Deve ser um número positivo.");
+      return;
+    }
+  
+    // Aqui você pode seguir com o número válido
+    alert(`Número da mesa válido: ${numMesa}`);
+  }
 
   return(
     <>
+      
+        <section className={styles.container}>
+          <h1 className={styles.h1}>Novo Pedido</h1>
+
+          <form className={styles.form} action={handleOpenOrder}>
+            <input 
+              type="number"
+              name='numMesa'
+              min='1'
+              placeholder='número da Mesa'
+              required
+              className={styles.inputOpen}
+            />
+
+            <Button name="Abrir Mesa"/>
+          </form>
+        </section>
+
       <main className={styles.container}>
 
         <section className={styles.containerHeader}>
