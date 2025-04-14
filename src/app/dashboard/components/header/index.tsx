@@ -46,7 +46,7 @@ export function Header(){
 
           <form action={handleLogout}>
             <button type='submit'>
-              <LogOutIcon size={24}/>
+              <LogOutIcon size={20}/>
             </button>
           </form>
         </nav>

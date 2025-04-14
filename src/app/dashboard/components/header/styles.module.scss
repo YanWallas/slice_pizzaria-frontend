@@ -43,7 +43,7 @@
   }
 }
 
-@media (max-width: 420px){
+@media (max-width: 500px){
   .headerContent nav{
     gap: 8px;
 
@@ -59,12 +59,16 @@
   }
 }
 
-@media (max-width: 350px){
+@media (max-width: 430px){
   .headerContent nav{
     gap: 4px;
 
+    a{
+      font-size: 12px;
+    }
+
     button{
-      margin-left: 6px;
+      margin-left: 6px;      
     }
   }
 
