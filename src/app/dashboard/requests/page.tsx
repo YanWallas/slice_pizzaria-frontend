@@ -1,16 +1,13 @@
 "use client";
 
-import { useSearchParams, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import styles from './styles.module.scss';
 import { getCookieClient } from "@/lib/cookieClient";
 
-export default function PedidoPage() {
-  const searchParams = useSearchParams();
+export default function Requests() {
   const params = useParams();
-
-  const number = searchParams.get("number");
   const order_id = params.id as string;
 
   const [order, setOrder] = useState<any>(null);
@@ -21,10 +18,10 @@ export default function PedidoPage() {
         const token = await getCookieClient();
 
         const response = await api.get("/order/detail", {
-          params: { 
-            order_id: Number(number)
+          params: {
+            order_id: Number(order_id) // agora usando o id recebido como param da rota
           },
-          headers:{
+          headers: {
             Authorization: `Bearer ${token}`
           }
         });
@@ -35,12 +32,16 @@ export default function PedidoPage() {
       }
     }
 
-    fetchOrder();
+    if (order_id) {
+      fetchOrder();
+    }
   }, [order_id]);
 
   return (
     <main className={styles.container}>
-      <h1 className={styles.title}>Pedido da Mesa {number}</h1>
+      <h1 className={styles.title}>
+        Pedido {order ? `da Mesa ${order.table}` : "Carregando..."}
+      </h1>
 
       {order ? (
         <div className={styles.infoBox}>

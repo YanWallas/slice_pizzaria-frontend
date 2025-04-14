@@ -22,23 +22,22 @@ export default function OpenOrder(){
       console.error("Número da mesa invalido!");
       return;
     }
-    
-    const formData = new FormData();
-    formData.append("table", numero.toString());
-    formData.append("name", nomeMesa);
 
     try{
       const token = await getCookieClient();
 
-    const response = await api.post('/order', formData, {
-      headers:{
-        Authorization: `Bearer ${token}`
-      }
-    })
+      const response = await api.post('/order', {
+        table: numero,
+        name: nomeMesa,
+      }, {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      });
 
     const orderId = response.data.id;
 
-    router.push(`/requests/${orderId}?number=${numero}`)
+    router.push(`/requests/${orderId}`)
 
     }catch(err){
       console.log(err);
