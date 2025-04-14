@@ -1,4 +1,5 @@
 import Orders from "./components/orders";
+import OpenOrder from "./components/openOrder";
 import { api } from "@/services/api";
 import { getCookieServer } from "@/lib/cookieServer";
 import { OrderProps } from "@/lib/order.type";
@@ -29,6 +30,7 @@ export default async function Dashboard(){
   return(
     <div>
       <>
+        <OpenOrder />
         <Orders orders={orders}/>
       </>
     </div>
