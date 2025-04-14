@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, ReactNode, useState} from "react"
+import { createContext, useContext, ReactNode, useState} from "react"
 import { api } from "@/services/api";
 import { getCookieClient } from "@/lib/cookieClient";
 import { toast } from "sonner";
@@ -107,4 +107,13 @@ export function OrderProvider({ children }: OrderProviderProps){
       {children}
     </OrderContext.Provider>
   )
+}
+
+// Exporte o hook useOrder
+export function useOrder() {
+  const context = useContext(OrderContext);
+  if (!context) {
+    throw new Error("useOrder deve ser usado dentro de um OrderProvider");
+  }
+  return context;
 }

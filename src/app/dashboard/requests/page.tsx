@@ -1,58 +1,35 @@
 "use client";
+import React, { useEffect } from "react";
+import { useOrder } from "@/providers/order";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { api } from "@/services/api";
-import styles from './styles.module.scss';
-import { getCookieClient } from "@/lib/cookieClient";
-
-export default function Requests() {
-  const params = useParams();
-  const order_id = params.id as string;
-
-  const [order, setOrder] = useState<any>(null);
+export default function RequestsPage() {
+  const { order, isOpen, onRequestClose } = useOrder();
+  const router = useRouter();
 
   useEffect(() => {
-    async function fetchOrder() {
-      try {
-        const token = await getCookieClient();
-
-        const response = await api.get("/order/detail", {
-          params: {
-            order_id: Number(order_id) // agora usando o id recebido como param da rota
-          },
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        setOrder(response.data);
-      } catch (err) {
-        console.error("Erro ao buscar os dados do pedido:", err);
-      }
+    if (!isOpen) {
+      toast.warning("Nenhuma mesa foi aberta.");
+      router.push("/dashboard");
     }
+  }, [isOpen, router]);
 
-    if (order_id) {
-      fetchOrder();
-    }
-  }, [order_id]);
+  const currentOrder = order[0]; // Pegamos o primeiro item
+  const mesa = currentOrder?.order;
+
+  if (!isOpen || !order || order.length === 0 || !mesa) {
+    return <div>Carregando ...</div>;
+  }
 
   return (
-    <main className={styles.container}>
-      <h1 className={styles.title}>
-        Pedido {order ? `da Mesa ${order.table}` : "Carregando..."}
-      </h1>
-
-      {order ? (
-        <div className={styles.infoBox}>
-          <p><strong>ID do Pedido:</strong> {order_id}</p>
-          <p><strong>Status:</strong> {order.status}</p>
-          <p><strong>Responsável:</strong> {order.name || "N/A"}</p>
-          {/* Mais detalhes aqui */}
-        </div>
-      ) : (
-        <p>Carregando detalhes do pedido...</p>
-      )}
+    <main>
+      <h1>Pedidos da Mesa</h1>
+      <div>
+        <h3>Mesa #{mesa.table}</h3>
+        <p>Responsável: {mesa.name || "Não especificado"}</p>
+        <button onClick={onRequestClose}>Fechar Pedido</button>
+      </div>
     </main>
   );
 }

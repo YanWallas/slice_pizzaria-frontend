@@ -6,9 +6,11 @@ import { api } from "@/services/api";
 import { getCookieClient } from "@/lib/cookieClient";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useOrder } from "@/providers/order"
 
 export default function OpenOrder(){
   const router = useRouter();
+  const { onRequestOpren } = useOrder();
 
   const [numMesa, setNumMesa] = useState("");
   const [nomeMesa, setNomeMesa] = useState('');
@@ -37,7 +39,9 @@ export default function OpenOrder(){
 
     const orderId = response.data.id;
 
-    router.push(`/requests/${orderId}`)
+    await onRequestOpren(orderId);
+
+    router.push(`/dashboard/requests/`)
 
     }catch(err){
       console.log(err);
