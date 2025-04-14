@@ -2,9 +2,12 @@
 import styles from './styles.module.scss';
 
 import { OrderProps } from '@/lib/order.type';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, CircleCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { use } from 'react';
+import { OrderContext } from '@/providers/order';
+import { Modaloarder } from '@/app/dashboard/components/modal';
 
 
 interface Props{
@@ -12,7 +15,13 @@ interface Props{
 }
 
 export default function FinishOrder({finishOrder}: Props){
+  const { isOpen, onRequestOpren } = use(OrderContext)
+
   const router = useRouter();
+
+  async function handleDetailOrder(order_id: string){
+    await onRequestOpren(order_id)
+  }
 
   function handleRefresh(){
     router.refresh();
@@ -32,19 +41,26 @@ export default function FinishOrder({finishOrder}: Props){
         <section className={styles.listOrders}>
           {finishOrder.length === 0 && (
             <span className={styles.emptyItem}>
-              Nenhum pedido finalizado no momento...
+              Nenhum histórico pedido no momento...
             </span>
           )}
 
           {finishOrder.map(order => (
-            <div key={order.id} className={styles.orderItem}>
+            <div key={order.id} className={styles.orderItem} onClick={() => handleDetailOrder(order.id)}>
             <div className={styles.tag}></div>
-            <span>Mesa: {order.table}</span>
-            {order.name? (<span className={styles.name}>Nome: {order.name}</span>) : ''}
+              <span>Mesa: {order.table}</span>
+              {order.name? (<span className={styles.name}>Nome: {order.name}</span>) : ''}
+              <CircleCheck size={24} className={styles.buttonCheck}/> 
             </div>
           ))}
         </section>
+
+        
       </main>
+
+      { isOpen && <Modaloarder/> }
+
+
       
     </>
   )

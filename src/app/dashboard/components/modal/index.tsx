@@ -4,6 +4,7 @@ import { X } from 'lucide-react'
 import { use } from 'react'
 import { OrderContext } from '@/providers/order';
 import { calculateTotalOrder } from '@/lib/helper';
+import { Span } from 'next/dist/trace';
 
 export function Modaloarder(){
   const { onRequestClose, finishOrder, order } = use(OrderContext);
@@ -47,9 +48,13 @@ export function Modaloarder(){
 
           <h3 className={styles.total}>Valor Total: <span className={styles.totalcor}>R$ {calculateTotalOrder(order)}</span></h3>
 
-          <button className={styles.buttonOrder} onClick={handleFinishOrder}>
-            Concluir pedido
-          </button>
+          {order[0].order.status? (
+            <span className={styles.pago}>Status: Pago</span>
+          ) : (
+            <button className={styles.buttonOrder} onClick={handleFinishOrder}>
+              Concluir pedido
+            </button>
+          )}
         </article>
       </section>
     </dialog>
