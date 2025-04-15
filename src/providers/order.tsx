@@ -108,12 +108,3 @@ export function OrderProvider({ children }: OrderProviderProps){
     </OrderContext.Provider>
   )
 }
-
-// Exporte o hook useOrder
-export function useOrder() {
-  const context = useContext(OrderContext);
-  if (!context) {
-    throw new Error("useOrder deve ser usado dentro de um OrderProvider");
-  }
-  return context;
-}
