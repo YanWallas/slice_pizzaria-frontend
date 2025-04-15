@@ -7,6 +7,7 @@ import { use } from 'react'
 import { OrderContext } from '@/providers/order';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Button } from '../button';
 
 interface Props{
   orders: OrderProps[]
@@ -27,8 +28,11 @@ export default function Orders({ orders }: Props){
 
   return(
     <>
-      <main className={styles.container}>
+      <form className={styles.container} action={handleRefresh}>
+        <Button name='Fazer Pedido'/>
+      </form>
 
+      <main className={styles.container}>
         <section className={styles.containerHeader}>
           <h1>Pedidos em aberto</h1>
           <button onClick={handleRefresh}>
