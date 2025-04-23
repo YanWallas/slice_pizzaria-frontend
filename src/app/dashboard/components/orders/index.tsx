@@ -22,8 +22,7 @@ export default function Orders({ orders }: Props){
   }
 
   function handleRefresh(){
-    router.refresh();
-    toast.success("Pedidos atualizados com sucesso!")
+    router.push("/dashboard/requests")
   }
 
   return(
