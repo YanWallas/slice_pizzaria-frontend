@@ -40,6 +40,7 @@ export default function Requests() {
       });
 
     toast.success("Pedido criado com sucesso!");
+    fetchOrders();
   }
 
   async function fetchOrders() {
@@ -69,7 +70,23 @@ export default function Requests() {
   }
 
   async function handleDeleteOrder(order_id: String) {
-    console.log(order_id); 
+    const token = await getCookieClient();
+
+    await api.delete("/order", {
+      params: {
+        order_id: String(order_id),
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch((err) => {
+      toast.warning("Erro ao deletar pedido!!!");
+      console.log(err);
+      return;
+    });
+    toast.success("Pedido deletado com sucesso!");
+    fetchOrders();
   }
 
   return (
