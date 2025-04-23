@@ -5,7 +5,7 @@ import { Button } from "../components/button";
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/api";
 import { toast } from "sonner";
-import { RefreshCw } from "lucide-react";
+import { DeleteIcon, RefreshCw } from "lucide-react";
 
 interface Order{
   id: string;
@@ -68,6 +68,10 @@ export default function Requests() {
     toast.success("Pedidos abertos atualizados com sucesso!");
   }
 
+  async function handleDeleteOrder(order_id: String) {
+    console.log(order_id); 
+  }
+
   return (
     <main className={styles.container}>
       <h1>Digite o número da mesa para fazer o pedido.</h1>
@@ -99,24 +103,32 @@ export default function Requests() {
         </button>
       </section>
 
-      {orders.length === 0 && (
+      {orders.length === 0 ? (
         <span className={styles.emptyItem}>
           Nenhum pedido em aberto no momento...
         </span>
+      ) : (
+        orders.map((order) => (
+          <section key={order.id} className={styles.orderItem}>
+            <div className={styles.orderInfo}>
+              <span>Mesa: {order.table}</span>
+              {order.name ? (
+                <span>Nome: {order.name}</span>
+              ) : (
+                ""
+              )}
+            </div>
+
+            <button className={styles.ButtonDeleteIcon}>
+              <DeleteIcon
+                size={24}
+                onClick={() => {handleDeleteOrder(order.id)}}
+              />
+            </button>
+          </section>
+        ))
       )}
 
-      {orders.map((order) => (
-        <button key={order.id} className={styles.orderItem}>
-          <div>
-            <span className={styles.tag}>Mesa: {order.table}</span>
-            {order.name ? (
-              <span className={styles.name}>Nome: {order.name}</span>
-            ) : (
-              ""
-            )}
-          </div>
-        </button>
-      ))}
  
     </main>
   );
