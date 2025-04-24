@@ -6,7 +6,7 @@ import { api } from '@/services/api';
 import { getCookieClient } from '@/lib/cookieClient';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { DeleteIcon } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 
 export default function Category(){
   const [categories, setCategories] = useState([]);
@@ -105,7 +105,7 @@ export default function Category(){
             categories.map((category: { id: number, name: string }) => (
               <li key={category.id}>
                 {category.name}
-                <DeleteIcon 
+                <Trash2 
                   size={24} 
                   className={styles.buttonLi} 
                   onClick={() => handleDeleteCategory(category.id)} />

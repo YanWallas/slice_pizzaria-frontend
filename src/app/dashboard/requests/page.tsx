@@ -5,7 +5,7 @@ import { Button } from "../components/button";
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/api";
 import { toast } from "sonner";
-import { DeleteIcon, RefreshCw } from "lucide-react";
+import { DeleteIcon, RefreshCw, SquarePen } from "lucide-react";
 
 interface Order{
   id: string;
@@ -89,6 +89,10 @@ export default function Requests() {
     fetchOrders();
   }
 
+  async function handleDetailOrder(order_id: String) {
+    alert(`Detalhes do pedido: ${order_id}`);
+  }
+
   return (
     <main className={styles.container}>
       <h1>Digite o número da mesa para fazer o pedido.</h1>
@@ -137,10 +141,18 @@ export default function Requests() {
             </div>
 
             <button className={styles.ButtonDeleteIcon}>
+              <SquarePen
+                size={24}
+                onClick={() => {handleDetailOrder(order.id)}}
+              />
+            </button>
+
+            <button className={styles.ButtonDeleteIcon}>
               <DeleteIcon
                 size={24}
                 onClick={() => {handleDeleteOrder(order.id)}}
               />
+              
             </button>
           </section>
         ))
