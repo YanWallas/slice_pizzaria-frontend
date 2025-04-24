@@ -89,8 +89,8 @@ export default function Requests() {
     fetchOrders();
   }
 
-  async function handleDetailOrder(order_id: String) {
-    alert(`Detalhes do pedido: ${order_id}`);
+  async function handleDetailOrder(order_id: string) {
+      
   }
 
   return (

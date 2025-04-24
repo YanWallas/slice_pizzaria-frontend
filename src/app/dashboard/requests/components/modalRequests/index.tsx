@@ -1,9 +1,16 @@
-import React from "react";
+"use client";
+
+import styles from "../../../components/modal/styles.module.scss";
+
 
 export function ModalRequests() {
+
   return (
-    <div>
-      <h1>Modal Requests</h1>
-    </div>
+    <dialog>
+      <section>
+        <h2>Faça seu pedido!</h2>
+
+      </section>
+    </dialog>
   );
 }
