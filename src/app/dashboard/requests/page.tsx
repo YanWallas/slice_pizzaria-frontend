@@ -1,11 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, use } from "react";
+import { OrderContext } from "@/providers/order";
 import styles from "./styles.module.scss";
 import { Button } from "../components/button";
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/api";
 import { toast } from "sonner";
 import { DeleteIcon, RefreshCw, SquarePen } from "lucide-react";
+import { ModalRequests } from "@/app/dashboard/requests/components/modalRequests";
 
 interface Order{
   id: string;
@@ -14,6 +16,7 @@ interface Order{
 }
 
 export default function Requests() {
+  const { isOpen, onRequestOpren } = use(OrderContext);
   const [orders, setOrders] = useState<Order[]>([]);
 
   async function handleRequests(formData: FormData) {
@@ -90,75 +93,78 @@ export default function Requests() {
   }
 
   async function handleDetailOrder(order_id: string) {
-      
-  }
+    await onRequestOpren(order_id)
+
+  } 
 
   return (
-    <main className={styles.container}>
-      <h1>Digite o número da mesa para fazer o pedido.</h1>
+    <>
+      <main className={styles.container}>
+        <h1>Digite o número da mesa para fazer o pedido.</h1>
 
-      <form className={styles.form} action={handleRequests}>
-      <input 
-        type="number" 
-        placeholder="Digite o numero da mesa."
-        required
-        name="table"
-        className={styles.input}
-      />
+        <form className={styles.form} action={handleRequests}>
+        <input 
+          type="number" 
+          placeholder="Digite o numero da mesa."
+          required
+          name="table"
+          className={styles.input}
+        />
 
-      <input 
-        type="text"
-        name="client"
-        placeholder="Digite o nome do cliente.(opicional)"
-        className={styles.input} 
-      />
+        <input 
+          type="text"
+          name="client"
+          placeholder="Digite o nome do cliente.(opicional)"
+          className={styles.input} 
+        />
 
-      
-        <Button name='Fazer Pedido'/>
-      </form>
+        
+          <Button name='Fazer Pedido'/>
+        </form>
 
-      <section className={styles.containerHeader}>
-        <h2>Pedidos em aberto</h2>
-        <button onClick={handleRefresh}>
-          <RefreshCw size={24} color="#ff2038" />
-        </button>
-      </section>
+        <section className={styles.containerHeader}>
+          <h2>Pedidos em aberto</h2>
+          <button onClick={handleRefresh}>
+            <RefreshCw size={24} color="#ff2038" />
+          </button>
+        </section>
 
-      {orders.length === 0 ? (
-        <span className={styles.emptyItem}>
-          Nenhum pedido em aberto no momento...
-        </span>
-      ) : (
-        orders.map((order) => (
-          <section key={order.id} className={styles.orderItem}>
-            <div className={styles.orderInfo}>
-              <span>Mesa: {order.table}</span>
-              {order.name ? (
-                <span>Nome: {order.name}</span>
-              ) : (
-                ""
-              )}
-            </div>
+        {orders.length === 0 ? (
+          <span className={styles.emptyItem}>
+            Nenhum pedido em aberto no momento...
+          </span>
+        ) : (
+          orders.map((order) => (
+            <section key={order.id} className={styles.orderItem}>
+              <div className={styles.orderInfo}>
+                <span>Mesa: {order.table}</span>
+                {order.name ? (
+                  <span>Nome: {order.name}</span>
+                ) : (
+                  ""
+                )}
+              </div>
 
-            <button className={styles.ButtonDeleteIcon}>
-              <SquarePen
-                size={24}
-                onClick={() => {handleDetailOrder(order.id)}}
-              />
-            </button>
+              <button className={styles.ButtonDeleteIcon}>
+                <SquarePen
+                  size={24}
+                  onClick={() => {handleDetailOrder(order.id)}}
+                />
+              </button>
 
-            <button className={styles.ButtonDeleteIcon}>
-              <DeleteIcon
-                size={24}
-                onClick={() => {handleDeleteOrder(order.id)}}
-              />
-              
-            </button>
-          </section>
-        ))
-      )}
+              <button className={styles.ButtonDeleteIcon}>
+                <DeleteIcon
+                  size={24}
+                  onClick={() => {handleDeleteOrder(order.id)}}
+                />
+                
+              </button>
+            </section>
+          ))
+        )}
+      </main>
 
- 
-    </main>
+      {isOpen && <ModalRequests />}
+    </>
   );
 }
