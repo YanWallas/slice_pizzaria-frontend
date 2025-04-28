@@ -16,7 +16,7 @@ interface Order{
 }
 
 export default function Requests() {
-  const { isOpen, onRequestOpren } = use(OrderContext);
+  const { isOpen, requestOpen } = use(OrderContext);
   const [orders, setOrders] = useState<Order[]>([]);
 
   async function handleRequests(formData: FormData) {
@@ -93,7 +93,7 @@ export default function Requests() {
   }
 
   async function handleDetailOrder(order_id: string) {
-    await onRequestOpren(order_id)
+    await requestOpen(order_id);
 
   } 
 

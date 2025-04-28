@@ -7,7 +7,7 @@ import { OrderContext } from "@/providers/order";
 
 
 export function ModalRequests() {
-  const { onRequestClose, finishOrder, order } = use(OrderContext);
+  const { onRequestClose, orderOpen } = use(OrderContext);
   
 
   return (
@@ -18,7 +18,7 @@ export function ModalRequests() {
         </button>
         <h2>Faça seu pedido!</h2>
         <span className={styles.table}>
-          Mesa <b>{order[0].order.table}</b>
+          Mesa <b>{orderOpen[0].table}</b>
         </span>
         
 
