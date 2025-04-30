@@ -48,14 +48,15 @@ export function ModalRequests() {
           placeholder="Digite a quantidade do produto"
         />
 
-        <button className={styles.buttonAdd}>
-          Adicionar
-        </button>
-        
-        <button className={styles.buttonFinish}>
-          Finalizar pedido
-        </button>
-
+        <section className={styles.containerButton}>
+          <button className={styles.buttonAdd}>
+            Adicionar
+          </button>
+          
+          <button className={styles.buttonFinish}>
+            Finalizar pedido
+          </button>
+        </section>
       </section>
     </dialog>
   );
