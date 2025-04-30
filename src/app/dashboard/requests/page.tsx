@@ -23,7 +23,10 @@ export default function Requests() {
     const table = formData.get("table");
     const client = formData.get("client");
 
-    if (table === "") return;
+    if (!table || isNaN(Number(table))) {
+      toast.error("Número da mesa inválido!");
+      return;
+    }
 
     const data = {
       table: Number(table),
@@ -32,18 +35,26 @@ export default function Requests() {
     
     const token = await getCookieClient();
 
-    const response = await api.post("/order", data, {
+    try {
+      const response = await api.post("/order", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .catch((err) => {
-        console.log(err);
-        return;
       });
 
-    toast.success("Pedido criado com sucesso!");
-    fetchOrders();
+      toast.success("Pedido criado com sucesso!");
+      if (response && response.data) {
+        await requestOpen({
+          id: response.data.id,
+          table: Number(table),
+          name: String(client),
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Erro ao criar pedido!");
+    }
+    
   }
 
   async function fetchOrders() {
@@ -92,11 +103,6 @@ export default function Requests() {
     fetchOrders();
   }
 
-  async function handleDetailOrder(order_id: string) {
-    await requestOpen(order_id);
-
-  } 
-
   return (
     <>
       <main className={styles.container}>
@@ -144,13 +150,6 @@ export default function Requests() {
                   ""
                 )}
               </div>
-
-              <button className={styles.ButtonDeleteIcon}>
-                <SquarePen
-                  size={24}
-                  onClick={() => {handleDetailOrder(order.id)}}
-                />
-              </button>
 
               <button className={styles.ButtonDeleteIcon}>
                 <DeleteIcon
