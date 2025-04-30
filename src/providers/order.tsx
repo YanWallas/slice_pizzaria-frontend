@@ -37,7 +37,7 @@ export interface OrderOpenProps{
 
 type OrderContextData = {
   isOpen: boolean;
-  requestOpen: (order_id: string) => Promise<void>;
+  requestOpen: ({ id, table, name }: OrderOpenProps) => Promise<void>;
   onRequestOpren: (order_id: string) => Promise<void>;
   onRequestClose: () => void;
   order: OrderItemProps[];
@@ -57,14 +57,14 @@ export function OrderProvider({ children }: OrderProviderProps){
   const [orderOpen, setOrderOpen] = useState<OrderOpenProps[]>([])
   const router = useRouter();
 
-  async function requestOpen(order_id: string){
+  async function requestOpen({id, table, name}: OrderOpenProps){
     const token = await getCookieClient();
 
     setOrderOpen([
       {
-        id: order_id,
-        table: 2,
-        name: null
+        id: id,
+        table: table,
+        name: name,
       }
     ]);
 
@@ -91,6 +91,7 @@ export function OrderProvider({ children }: OrderProviderProps){
 
   function onRequestClose(){
     setIsOpen(false);
+    
   }
 
   async function finishOrder(order_id: string){

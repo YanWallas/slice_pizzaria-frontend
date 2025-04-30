@@ -18,8 +18,14 @@ export function ModalRequests() {
         </button>
         <h2>Faça seu pedido!</h2>
         <span className={styles.table}>
+          
           Mesa <b>{orderOpen[0].table}</b>
         </span>
+        {orderOpen[0].name && (
+          <span className={styles.client}>
+            Nome do cliente: <b>{orderOpen[0].name}</b>
+          </span>
+        )}
 
         <span>Categoria</span>
         <input 
