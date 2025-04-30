@@ -17,12 +17,13 @@ export function ModalRequests() {
           <X size={40} color="#9c3434"/>
         </button>
         <h2>Faça seu pedido!</h2>
-        <span className={styles.table}>
+        <span className={styles.info}>
           
           Mesa <b>{orderOpen[0].table}</b>
         </span>
+
         {orderOpen[0].name && (
-          <span className={styles.client}>
+          <span className={styles.info}>
             Nome do cliente: <b>{orderOpen[0].name}</b>
           </span>
         )}
