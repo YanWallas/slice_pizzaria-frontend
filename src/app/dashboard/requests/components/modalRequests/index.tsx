@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
-import { X } from "lucide-react";
 import { use } from "react";
 import { OrderContext } from "@/providers/order";
 import { api } from "@/services/api";
 import { getCookieClient } from "@/lib/cookieClient";
-import Category from "@/app/dashboard/category/page";
+import { toast } from "sonner";
 
 type CategoryProps = {
   id: string;
@@ -27,7 +26,7 @@ type ItemProps ={
 }
 
 export function ModalRequests() {
-  const { onRequestClose, orderOpen } = use(OrderContext);
+  const { orderOpen } = use(OrderContext);
 
   const [category, setCategory] = useState<CategoryProps[] | []>([]);
   const [categorySelected, setCategorySelected] = useState<CategoryProps | undefined>();
@@ -70,14 +69,54 @@ export function ModalRequests() {
     }
     loadProducts();
   }, [categorySelected]);
+
+  async function handleAddItem(){
+    if(!productSelected || !categorySelected){
+      toast.error("Selecione um produto e uma categoria.");
+      return;
+    }
+
+    if(amount < 1){
+      toast.error("A quantidade deve ser maior que 0.");
+      return;
+    }
+
+    if (!orderOpen.length) {
+      toast.error("Nenhum pedido em aberto.");
+      return;
+    }    
+
+    const token = await getCookieClient();
+
+    try{
+      const response = await api.post("/order/add", {
+        order_id: orderOpen[0].id,
+        product_id: productSelected.id,
+        amount
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setItems((prev) => [...prev, {
+        id: response.data.id,
+        product_id: productSelected.id,
+        name: productSelected.name,
+        amount: response.data.amount
+      }]);
+      setAmount(1);
+    }catch(err){
+      console.error("Erro ao adicionar item:", err);
+      toast.error("Não foi possível adicionar o item. Tente novamente.");
+    }
+    
+  }
   
 
   return (
     <dialog className={styles.dialogContainer}>
       <section className={styles.dialogContent}>
-        <button className={styles.dialogBack} onClick={onRequestClose}>
-          <X size={40} color="#9c3434"/>
-        </button>
         <h2>Faça seu pedido!</h2>
         <span className={styles.info}>
           
@@ -90,29 +129,39 @@ export function ModalRequests() {
           </span>
         )}
 
-        <span>Categoria</span>
-        <select 
-          value={categorySelected?.id} 
-          onChange={(e) => setCategorySelected(category.find(category => category.id === e.target.value))}
-        >
+        {category.length > 0 && (
+          <>
+            <span>Categoria</span>
+            <select 
+              className={styles.selectOptions}
+              value={categorySelected?.id} 
+              onChange={(e) => setCategorySelected(category.find(category => category.id === e.target.value))}
+            >
             {category.map(category => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
-          ))}
+            ))}
         </select>
+          </>
+        )}
 
-        <span>Produto</span>
-        <select
-          value={productSelected?.id} 
-          onChange={(e) => setProductSelected(product.find(product => product.id === e.target.value))}
-        >
-        {product.map(product => (
-          <option key={product.id} value={product.id}>
-            {product.name}
-          </option>
-        ))}
-        </select>
+        {product.length > 0 &&(
+          <>
+            <span>Produto</span>
+            <select 
+              className={styles.selectOptions}
+              value={productSelected?.id} 
+              onChange={(e) => setProductSelected(product.find(product => product.id === e.target.value))}
+            >
+              {product.map(product => (
+                <option key={product.id} value={product.id}>
+                  {product.name}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
 
         <span>Quantidade</span>
         <input 
@@ -123,7 +172,7 @@ export function ModalRequests() {
         />
 
         <section className={styles.containerButton}>
-          <button className={styles.buttonAdd}>
+          <button className={styles.buttonAdd} onClick={handleAddItem}>
             Adicionar
           </button>
           
@@ -131,6 +180,18 @@ export function ModalRequests() {
             Finalizar pedido
           </button>
         </section>
+     
+
+        {items.length > 0 && (
+          <>
+            <h3>Itens do pedido</h3>
+              {items.map(item => (
+                <span key={item.id}>
+                   Qtd: {item.amount} - {item.name}
+                </span>
+              ))}
+          </>
+        )}
       </section>
     </dialog>
   );
