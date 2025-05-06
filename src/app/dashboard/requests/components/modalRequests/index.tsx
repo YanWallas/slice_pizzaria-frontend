@@ -32,6 +32,7 @@ export function ModalRequests() {
   const [category, setCategory] = useState<CategoryProps[] | []>([]);
   const [categorySelected, setCategorySelected] = useState<CategoryProps | undefined>();
   const [product, setProduct] = useState<productsProps[] | []>([]);
+  const [productSelected, setProductSelected] = useState<productsProps | undefined>();
   const [amount, setAmount] = useState(1);
   const [items, setItems] = useState<ItemProps[]>([]);
 
@@ -44,11 +45,31 @@ export function ModalRequests() {
           Authorization: `Bearer ${token}`,
         },
       });
+
       setCategory(response.data);
       setCategorySelected(response.data[0]);
     }
     loadCategory();
   }, []);
+
+  useEffect(() => {
+    async function loadProducts(){
+      const token = await getCookieClient();    
+      
+      const response = await api.get('/category/product', {
+        params:{
+          category_id: categorySelected?.id
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      setProduct(response.data);
+      setProductSelected(response.data[0]);
+    }
+    loadProducts();
+  }, [categorySelected]);
   
 
   return (
@@ -72,7 +93,8 @@ export function ModalRequests() {
         <span>Categoria</span>
         <select 
           value={categorySelected?.id} 
-          onChange={(e) => setCategorySelected(category.find(category => category.id === e.target.value))}>
+          onChange={(e) => setCategorySelected(category.find(category => category.id === e.target.value))}
+        >
             {category.map(category => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -81,17 +103,23 @@ export function ModalRequests() {
         </select>
 
         <span>Produto</span>
-        <input 
-          type="text"
-          name="category"
-          placeholder="Digite a categoria do produto"
-        />
+        <select
+          value={productSelected?.id} 
+          onChange={(e) => setProductSelected(product.find(product => product.id === e.target.value))}
+        >
+        {product.map(product => (
+          <option key={product.id} value={product.id}>
+            {product.name}
+          </option>
+        ))}
+        </select>
 
         <span>Quantidade</span>
         <input 
           type="number"
-          name="amount"
-          placeholder="Digite a quantidade do produto"
+          value={amount}
+          onChange={(e) => setAmount(Number(e.target.value))}
+          min={1}
         />
 
         <section className={styles.containerButton}>
