@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, ReactNode, useState} from "react"
+import { createContext, ReactNode, useState} from "react"
 import { api } from "@/services/api";
 import { getCookieClient } from "@/lib/cookieClient";
 import { toast } from "sonner";

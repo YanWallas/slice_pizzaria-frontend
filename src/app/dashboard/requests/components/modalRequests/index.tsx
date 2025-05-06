@@ -1,13 +1,51 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import { X } from "lucide-react";
 import { use } from "react";
 import { OrderContext } from "@/providers/order";
+import { api } from "@/services/api";
+import { getCookieClient } from "@/lib/cookieClient";
 
+type CategoryProps = {
+  id: string;
+  name: string;
+}
+
+type productsProps = {
+  id: string;
+  name: string;
+}
+
+type ItemProps ={
+  id: string;
+  product_id: string;
+  name: string;
+  amount: string | number;
+}
 
 export function ModalRequests() {
   const { onRequestClose, orderOpen } = use(OrderContext);
+
+  const [category, setCategory] = useState<CategoryProps[] | []>([]);
+  const [product, setProduct] = useState<productsProps[] | []>([]);
+  const [amount, setAmount] = useState(1);
+  const [items, setItems] = useState<ItemProps[]>([]);
+
+  useEffect(() => {
+    async function loadCategory(){
+      const token = await getCookieClient();
+
+      const response = await api.get(`/category`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCategory(response.data);
+    }
+    loadCategory();
+  }, []);
   
 
   return (
@@ -58,6 +96,13 @@ export function ModalRequests() {
             Finalizar pedido
           </button>
         </section>
+        {category.map(item => {
+          return (
+            <section key={item.id} className={styles.category}>
+              <h3>{item.name}</h3>
+            </section>
+          )
+        })}
       </section>
     </dialog>
   );
