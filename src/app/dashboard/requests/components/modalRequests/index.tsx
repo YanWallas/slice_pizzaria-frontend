@@ -7,6 +7,7 @@ import { use } from "react";
 import { OrderContext } from "@/providers/order";
 import { api } from "@/services/api";
 import { getCookieClient } from "@/lib/cookieClient";
+import Category from "@/app/dashboard/category/page";
 
 type CategoryProps = {
   id: string;
@@ -29,6 +30,7 @@ export function ModalRequests() {
   const { onRequestClose, orderOpen } = use(OrderContext);
 
   const [category, setCategory] = useState<CategoryProps[] | []>([]);
+  const [categorySelected, setCategorySelected] = useState<CategoryProps | undefined>();
   const [product, setProduct] = useState<productsProps[] | []>([]);
   const [amount, setAmount] = useState(1);
   const [items, setItems] = useState<ItemProps[]>([]);
@@ -43,6 +45,7 @@ export function ModalRequests() {
         },
       });
       setCategory(response.data);
+      setCategorySelected(response.data[0]);
     }
     loadCategory();
   }, []);
@@ -67,11 +70,15 @@ export function ModalRequests() {
         )}
 
         <span>Categoria</span>
-        <input 
-          type="text"
-          name="category"
-          placeholder="Digite a categoria do produto"
-        />
+        <select 
+          value={categorySelected?.id} 
+          onChange={(e) => setCategorySelected(category.find(category => category.id === e.target.value))}>
+            {category.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+          ))}
+        </select>
 
         <span>Produto</span>
         <input 
@@ -96,13 +103,6 @@ export function ModalRequests() {
             Finalizar pedido
           </button>
         </section>
-        {category.map(item => {
-          return (
-            <section key={item.id} className={styles.category}>
-              <h3>{item.name}</h3>
-            </section>
-          )
-        })}
       </section>
     </dialog>
   );
