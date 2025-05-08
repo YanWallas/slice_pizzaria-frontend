@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 import { RefreshCw } from 'lucide-react';
 import { OrderProps } from '@/lib/order.type';
 import { Modaloarder } from '@/app/dashboard/components/modal';
-import { use } from 'react'
+import { useContext } from 'react'
 import { OrderContext } from '@/providers/order';
 import { useRouter } from 'next/navigation';
 import { Button } from '../button';
@@ -13,7 +13,7 @@ interface Props{
 }
 
 export default function Orders({ orders }: Props){
-  const { isOpen, onRequestOpren } = use(OrderContext)
+  const { isOpen, onRequestOpren } = useContext(OrderContext)
   const router = useRouter();
 
   async function handleDetailOrder(order_id: string){

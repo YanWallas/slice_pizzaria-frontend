@@ -7,6 +7,9 @@ import { OrderContext } from "@/providers/order";
 import { api } from "@/services/api";
 import { getCookieClient } from "@/lib/cookieClient";
 import { toast } from "sonner";
+import { Trash2 } from 'lucide-react';
+
+
 
 type CategoryProps = {
   id: string;
@@ -26,7 +29,7 @@ type ItemProps ={
 }
 
 export function ModalRequests() {
-  const { orderOpen } = use(OrderContext);
+  const { orderOpen, onRequestClose } = use(OrderContext);
 
   const [category, setCategory] = useState<CategoryProps[] | []>([]);
   const [categorySelected, setCategorySelected] = useState<CategoryProps | undefined>();
@@ -112,6 +115,26 @@ export function ModalRequests() {
     }
     
   }
+
+  async function handleDeleteOrder(order_id: String) {
+    const token = await getCookieClient();
+  
+    await api.delete("/order", {
+      params: {
+        order_id: String(order_id),
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch((err) => {
+      toast.warning("Erro ao deletar pedido!!!");
+      console.log(err);
+      return;
+    });
+    toast.success("Pedido deletado com sucesso!");
+    onRequestClose();
+  }
   
 
   return (
@@ -119,7 +142,14 @@ export function ModalRequests() {
       <section className={styles.dialogContent}>
         <h2>Faça seu pedido!</h2>
         <span className={styles.info}>
-          
+          {items.length == 0 && (
+            <Trash2 
+              size={24} 
+              className={styles.buttonLi} 
+              onClick={() => handleDeleteOrder(orderOpen[0].id)} 
+            />
+          )}
+        
           Mesa <b>{orderOpen[0].table}</b>
         </span>
 
