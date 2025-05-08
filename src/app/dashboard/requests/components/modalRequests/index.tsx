@@ -8,6 +8,7 @@ import { api } from "@/services/api";
 import { getCookieClient } from "@/lib/cookieClient";
 import { toast } from "sonner";
 import { Trash2 } from 'lucide-react';
+import { useRouter } from "next/navigation";
 
 type CategoryProps = {
   id: string;
@@ -28,6 +29,7 @@ type ItemProps ={
 
 export function ModalRequests() {
   const { orderOpen, onRequestClose } = use(OrderContext);
+  const router = useRouter();
 
   const [category, setCategory] = useState<CategoryProps[] | []>([]);
   const [categorySelected, setCategorySelected] = useState<CategoryProps | undefined>();
@@ -154,6 +156,26 @@ export function ModalRequests() {
       toast.error("Não foi possível deletar o item. Tente novamente.");
     }
   }
+
+  async function handleFinishOrder(){
+    const token = await getCookieClient();
+
+    try{
+      await api.put('/order/send', {
+        order_id: orderOpen[0].id
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      toast.success("Pedido finalizado com sucesso!");
+      onRequestClose();
+      router.push("/dashboard");
+    }catch(err){
+      console.log("ERRO AO FINALIZAR, tente mais tarde")
+    }
+  }
   
 
   return (
@@ -225,7 +247,8 @@ export function ModalRequests() {
             Adicionar
           </button>
           
-          <button className={styles.buttonFinish}>
+          
+          <button className={styles.buttonFinish} onClick={handleFinishOrder} disabled={items.length === 0}>
             Finalizar pedido
           </button>
         </section>

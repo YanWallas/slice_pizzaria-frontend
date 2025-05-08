@@ -122,6 +122,11 @@
   &:active{
     transform: scale(0.97); /* efeito de "afundar" */
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   
   @media (max-width: 500px) {
     font-size: 14px;
