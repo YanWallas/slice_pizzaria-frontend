@@ -6,7 +6,7 @@ import { Button } from "../components/button";
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/api";
 import { toast } from "sonner";
-import { DeleteIcon, RefreshCw, SquarePen } from "lucide-react";
+import { RefreshCw, SquarePen } from "lucide-react";
 import { ModalRequests } from "@/app/dashboard/requests/components/modalRequests";
 
 interface Order{
@@ -83,25 +83,9 @@ export default function Requests() {
     toast.success("Pedidos abertos atualizados com sucesso!");
   }
 
-  async function handleDeleteOrder(order_id: String) {
-    const token = await getCookieClient();
-
-    await api.delete("/order", {
-      params: {
-        order_id: String(order_id),
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .catch((err) => {
-      toast.warning("Erro ao deletar pedido!!!");
-      console.log(err);
-      return;
-    });
-    toast.success("Pedido deletado com sucesso!");
-    fetchOrders();
-  }
+  // async function handleDetailOrder(order_id: string){
+  //   await 
+  // }
 
   return (
     <>
@@ -128,14 +112,14 @@ export default function Requests() {
           <Button name='Fazer Pedido'/>
         </form>
 
-        <section className={styles.containerHeader}>
+        {/* <section className={styles.containerHeader}>
           <h2>Pedidos em aberto</h2>
           <button onClick={handleRefresh}>
             <RefreshCw size={24} color="#ff2038" />
           </button>
-        </section>
+        </section> */}
 
-        {orders.length === 0 ? (
+        {/* {orders.length === 0 ? (
           <span className={styles.emptyItem}>
             Nenhum pedido em aberto no momento...
           </span>
@@ -152,15 +136,15 @@ export default function Requests() {
               </div>
 
               <button className={styles.ButtonDeleteIcon}>
-                <DeleteIcon
+                <SquarePen
                   size={24}
-                  onClick={() => {handleDeleteOrder(order.id)}}
+                  onClick={() => {handleDetailOrder()}}
                 />
                 
               </button>
             </section>
           ))
-        )}
+        )} */}
       </main>
 
       {isOpen && <ModalRequests />}
