@@ -9,8 +9,6 @@ import { getCookieClient } from "@/lib/cookieClient";
 import { toast } from "sonner";
 import { Trash2 } from 'lucide-react';
 
-
-
 type CategoryProps = {
   id: string;
   name: string;
@@ -135,6 +133,27 @@ export function ModalRequests() {
     toast.success("Pedido deletado com sucesso!");
     onRequestClose();
   }
+
+  async function handleDeleteItem(item_id: String) {
+    const token = await getCookieClient();
+
+    try {
+      await api.delete("/order/remove", {
+        params: {
+          item_id: String(item_id),
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setItems((prev) => prev.filter(item => item.id !== item_id));
+      toast.success("Item deletado com sucesso!");
+
+    }catch(err) {
+      console.error("Erro ao deletar item:", err);
+      toast.error("Não foi possível deletar o item. Tente novamente.");
+    }
+  }
   
 
   return (
@@ -142,6 +161,8 @@ export function ModalRequests() {
       <section className={styles.dialogContent}>
         <h2>Faça seu pedido!</h2>
         <span className={styles.info}>
+          Mesa <b>{orderOpen[0].table}</b>
+
           {items.length == 0 && (
             <Trash2 
               size={24} 
@@ -149,8 +170,6 @@ export function ModalRequests() {
               onClick={() => handleDeleteOrder(orderOpen[0].id)} 
             />
           )}
-        
-          Mesa <b>{orderOpen[0].table}</b>
         </span>
 
         {orderOpen[0].name && (
@@ -213,14 +232,19 @@ export function ModalRequests() {
      
 
         {items.length > 0 && (
-          <>
+          <div className={styles.selectItems}>
             <h3>Itens do pedido</h3>
-              {items.map(item => (
-                <span key={item.id}>
-                   Qtd: {item.amount} - {item.name}
-                </span>
-              ))}
-          </>
+            {items.map(item => (
+              <span key={item.id} className={styles.item}>
+                Qtd: {item.amount} - {item.name}
+                <Trash2 
+                  size={20} 
+                  className={styles.buttonitem} 
+                  onClick={() => handleDeleteItem(item.id)} 
+                />
+              </span>
+            ))}
+          </div>
         )}
       </section>
     </dialog>
