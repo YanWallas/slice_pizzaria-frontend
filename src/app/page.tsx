@@ -47,8 +47,7 @@ export default function Page(){
       console.log(err)
     }
 
-    redirect("/dashboard")
-    
+    redirect("/dashboard");
   }
 
   return(
