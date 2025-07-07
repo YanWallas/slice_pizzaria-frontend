@@ -6,7 +6,7 @@ import { Button } from "../components/button";
 import { getCookieClient } from "@/lib/cookieClient";
 import { api } from "@/services/api";
 import { toast } from "sonner";
-import { RefreshCw, SquarePen } from "lucide-react";
+//import { RefreshCw, SquarePen } from "lucide-react";
 import { ModalRequests } from "@/app/dashboard/requests/components/modalRequests";
 
 interface Order{
@@ -78,10 +78,10 @@ export default function Requests() {
     fetchOrders();
   },[]);
 
-  function handleRefresh() {
-    fetchOrders();
-    toast.success("Pedidos abertos atualizados com sucesso!");
-  }
+  // function handleRefresh() {
+  //   fetchOrders();
+  //   toast.success("Pedidos abertos atualizados com sucesso!");
+  // }
 
   // async function handleDetailOrder(order_id: string){
   //   await 
